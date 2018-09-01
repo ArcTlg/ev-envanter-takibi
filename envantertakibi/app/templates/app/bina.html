@@ -1,0 +1,31 @@
+{% extends 'app/base.html' %}
+
+{% block panel_title %}{{ bina }}{% endblock %}
+
+{% block panel_title_button %}
+    <a type="button" href="{% url 'app:daire_ekle' bina_slug=bina.slug %}" class="btn btn-sm btn-success">+ Yeni Daire</a>
+{% endblock %}
+
+{% block table_column_title %}
+  <th scope="col">Daireler</th>
+  <th scope="col">Oda Sayisi</th>
+  <th scope="col">Toplam Degeri</th>
+{% endblock %}
+
+{% block table_body %}
+  {% for daire in daireler %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>Daire: {{ daire.no }}</td>
+      <td>{{ daire.oda_set.all.count }}</td>
+      <td>{{ daire.total_price }}</td>
+      <td align="center">
+        <a href="{% url 'app:daire' bina_slug=bina.slug  pk=daire.pk %}" type="button" class="btn btn-outline-dark"><em class="fas fa-th"></em></a>
+        <form method="post">
+          {% csrf_token %}
+          <button class="btn btn-outline-danger" name="delete_item" value="{{ daire.id }}"><em class="fa fa-trash"></em></button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+{% endblock %}

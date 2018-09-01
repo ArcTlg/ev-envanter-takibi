@@ -1,0 +1,32 @@
+{% extends 'app/base.html' %}
+{% block back_button %}{% endblock %}
+
+{% block panel_title %}Ev Envanter Sistemi{% endblock %}
+
+{% block panel_title_button %}
+    <a type="button" href="{% url 'app:bina_ekle' %}" class="btn btn-sm btn-success">+ Yeni Bina</a>
+{% endblock %}
+
+{% block table_column_title %}
+  <th scope="col">Binalar</th>
+  <th scope="col">Daire Sayisi</th>
+  <th scope="col">Toplam Degeri</th>
+{% endblock %}
+
+{% block table_body %}
+  {% for bina in binalar %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ bina }}</td>
+      <td>{{ bina.daire_set.all.count }}</td>
+      <td>{{ bina.total_price }}</td>
+      <td align="center">
+        <a href="{% url 'app:bina' bina_slug=bina.slug %}" class="btn btn-outline-dark"><em class="fas fa-th"></em></a>
+        <form method="post">
+          {% csrf_token %}
+          <button class="btn btn-outline-danger" name="delete_item" value="{{ bina.id }}"><em class="fa fa-trash"></em></button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+{% endblock %}

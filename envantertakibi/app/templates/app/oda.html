@@ -1,0 +1,29 @@
+{% extends 'app/base.html' %}
+
+{% block panel_title %}{{ daire }} / {{ oda }}{% endblock %}
+
+{% block panel_title_button %}
+    <a type="button" href="{% url 'app:esya_ekle' bina_slug=bina.slug pk=daire.pk oda_slug=oda.slug%}" class="btn btn-sm btn-success">+ Yeni Esya</a>
+{% endblock %}
+
+{% block table_column_title %}
+  <th scope="col">Esyalar</th>
+  <th scope="col">Deger</th>
+{% endblock %}
+
+{% block table_body %}
+  {% for esya in esyalar %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ esya }}</td>
+      <td>{{ esya.price }}</td>
+      <td align="center">
+        <form method="post">
+          {% csrf_token %}
+          <button class="btn btn-outline-dark" name="edit_item" value="{{ esya.id }}"><em class="far fa-edit"></em></button>
+          <button class="btn btn-outline-danger" name="delete_item" value="{{ esya.id }}"><em class="fa fa-trash"></em></button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+{% endblock %}
