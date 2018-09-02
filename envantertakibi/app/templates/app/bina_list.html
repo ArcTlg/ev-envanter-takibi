@@ -1,10 +1,9 @@
 {% extends 'app/base.html' %}
-{% block back_button %}{% endblock %}
 
 {% block panel_title %}Ev Envanter Sistemi{% endblock %}
 
 {% block panel_title_button %}
-    <a type="button" href="{% url 'app:bina_ekle' %}" class="btn btn-sm btn-success">+ Yeni Bina</a>
+    <a type="button" href="{% url 'app:bina-ekle' %}" class="btn btn-sm btn-success">+ Yeni Bina</a>
 {% endblock %}
 
 {% block table_column_title %}
@@ -21,8 +20,9 @@
       <td>{{ bina.daire_set.all.count }}</td>
       <td>{{ bina.total_price }}</td>
       <td align="center">
-        <a href="{% url 'app:bina' bina_slug=bina.slug %}" class="btn btn-outline-dark"><em class="fas fa-th"></em></a>
-        <form method="post">
+        <a href="{% url 'app:daire-list' bina_slug=bina.slug %}" class="btn btn-outline-dark"><em class="fas fa-th"></em></a>
+        <a href="{% url 'app:bina-guncelle' pk=bina.pk %}" class="btn btn-outline-dark"><em class="fas fa-redo"></em></a>
+        <form action="{% url 'app:bina-sil' pk=bina.id %} " method="post">
           {% csrf_token %}
           <button class="btn btn-outline-danger" name="delete_item" value="{{ bina.id }}"><em class="fa fa-trash"></em></button>
         </form>

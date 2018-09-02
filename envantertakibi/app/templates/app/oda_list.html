@@ -1,9 +1,13 @@
 {% extends 'app/base.html' %}
 
+{% block back_button %}
+<a href="{% url 'app:daire-list'  bina_slug=daire.bina.slug %}" class="btn btn-outline-secondary"><em class="far fa-arrow-alt-circle-left fa-2x"></em></a>
+{% endblock %}
+
 {% block panel_title %}{{ daire }}{% endblock %}
 
 {% block panel_title_button %}
-    <a type="button" href="{% url 'app:oda_ekle' bina_slug=bina.slug pk=daire.pk %}" class="btn btn-sm btn-success">+ Yeni Oda</a>
+    <a type="button" href="{% url 'app:oda-ekle' bina_slug=daire.bina.slug daire_pk=daire.pk %}" class="btn btn-sm btn-success">+ Yeni Oda</a>
 {% endblock %}
 
 {% block table_column_title %}
@@ -20,8 +24,9 @@
       <td>{{ oda.esya_set.all.count }}</td>
       <td>{{ oda.total_price }}</td>
       <td align="center">
-        <a href="{% url 'app:oda' bina_slug=bina.slug  pk=daire.pk oda_slug=oda.slug%}" class="btn btn-outline-dark"><em class="fas fa-th"></em></a>
-        <form method="post">
+        <a href="{% url 'app:esya-list' bina_slug=daire.bina.slug  daire_pk=daire.pk oda_slug=oda.slug%}" class="btn btn-outline-dark"><em class="fas fa-th"></em></a>
+        <a href="{% url 'app:oda-guncelle' pk=oda.pk%}" class="btn btn-outline-dark"><em class="fas fa-redo"></em></a>
+        <form action="{% url 'app:oda-sil' pk=oda.id %} " method="post">
           {% csrf_token %}
           <button class="btn btn-outline-danger" name="delete_item" value="{{ oda.id }}"><em class="fa fa-trash"></em></button>
         </form>

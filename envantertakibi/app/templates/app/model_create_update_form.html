@@ -1,0 +1,21 @@
+{% extends 'app/base.html' %}
+{% block back_button %}{% endblock %}
+
+
+{% block panel_title %}{{ panel_title }}{% endblock %}
+
+{% block panel_body %}
+    <div class="container">
+      <form method="post">
+        <div class="form-group">
+            <div class="col-sm-5">
+                <form method="post">{% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success" value="Kaydet">Kaydet</button>
+                </form>
+                    <a href="{{ back_url }}" type="submit" class="btn btn-danger" name="iptal">Iptal</a>
+            </div>
+        </div>
+      </form>
+    </div>
+{% endblock %}

@@ -1,9 +1,13 @@
 {% extends 'app/base.html' %}
 
+{% block back_button %}
+<a href="{% url 'app:oda-list' bina_slug=daire.bina.slug daire_pk=daire.pk %}" class="btn btn-outline-secondary"><em class="far fa-arrow-alt-circle-left fa-2x"></em></a>
+{% endblock %}
+
 {% block panel_title %}{{ daire }} / {{ oda }}{% endblock %}
 
 {% block panel_title_button %}
-    <a type="button" href="{% url 'app:esya_ekle' bina_slug=bina.slug pk=daire.pk oda_slug=oda.slug%}" class="btn btn-sm btn-success">+ Yeni Esya</a>
+    <a type="button" href="{% url 'app:esya-ekle' bina_slug=daire.bina.slug daire_pk=daire.pk oda_slug=oda.slug%}" class="btn btn-sm btn-success">+ Yeni Esya</a>
 {% endblock %}
 
 {% block table_column_title %}
@@ -18,9 +22,9 @@
       <td>{{ esya }}</td>
       <td>{{ esya.price }}</td>
       <td align="center">
-        <form method="post">
+        <a href="{% url 'app:esya-guncelle' pk=esya.pk%}" class="btn btn-outline-dark"><em class="fas fa-redo"></em></a>
+        <form action="{% url 'app:esya-sil' pk=esya.id %} " method="post">
           {% csrf_token %}
-          <button class="btn btn-outline-dark" name="edit_item" value="{{ esya.id }}"><em class="far fa-edit"></em></button>
           <button class="btn btn-outline-danger" name="delete_item" value="{{ esya.id }}"><em class="fa fa-trash"></em></button>
         </form>
       </td>
