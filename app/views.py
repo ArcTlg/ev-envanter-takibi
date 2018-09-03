@@ -92,7 +92,11 @@ class ModelCreateView(CreateView):
             self.fields = ['no']
 
     def get_context_data(self, **kwargs):
-        back_url = self.request.META['HTTP_REFERER']
+        if 'HTTP_REFERER' in self.request.META:
+            back_url = self.request.META['HTTP_REFERER']
+        else:
+            back_url = '/'
+
         context = super(ModelCreateView, self).get_context_data(**kwargs)
         context['back_url'] = back_url
 
@@ -134,7 +138,11 @@ class ModelUpdateView(UpdateView):
             self.fields = ['bina', 'no']
 
     def get_context_data(self, **kwargs):
-        back_url = self.request.META['HTTP_REFERER']
+        if 'HTTP_REFERER' in self.request.META:
+            back_url = self.request.META['HTTP_REFERER']
+        else:
+            back_url = '/'
+
         context = super(ModelUpdateView, self).get_context_data(**kwargs)
         context['back_url'] = back_url
 
@@ -154,6 +162,7 @@ class DaireDeleteView(DeleteView):
     def dispatch(self, request, *args, **kwargs):
         daire = Daire.objects.get(pk=self.kwargs['pk'])
         self.success_url = reverse_lazy('app:daire-list', kwargs={'bina_slug': daire.bina.slug})
+
         return super(DaireDeleteView, self).dispatch(request, *args, **kwargs)
 
 
@@ -164,7 +173,8 @@ class OdaDeleteView(DeleteView):
     def dispatch(self, request, *args, **kwargs):
         oda = Oda.objects.get(pk=self.kwargs['pk'])
         self.success_url = reverse_lazy('app:oda-list', kwargs={'bina_slug': oda.daire.bina.slug,
-                                                                  'daire_pk': oda.daire.pk})
+                                                                'daire_pk': oda.daire.pk})
+
         return super(OdaDeleteView, self).dispatch(request, *args, **kwargs)
 
 
@@ -175,8 +185,9 @@ class EsyaDeleteView(DeleteView):
     def dispatch(self, request, *args, **kwargs):
         esya = Esya.objects.get(pk=self.kwargs['pk'])
         self.success_url = reverse_lazy('app:esya-list', kwargs={'bina_slug': esya.oda.daire.bina.slug,
-                                                                  'daire_pk': esya.oda.daire.pk,
-                                                                  'oda_slug': esya.oda.slug})
+                                                                 'daire_pk': esya.oda.daire.pk,
+                                                                 'oda_slug': esya.oda.slug})
+
         return super(EsyaDeleteView, self).dispatch(request, *args, **kwargs)
 
 
