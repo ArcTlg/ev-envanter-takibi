@@ -1,16 +1,26 @@
 # -*- coding: utf-8 -*-
 
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
+from django.utils.decorators import method_decorator
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+
 from django.urls import reverse_lazy
 
 from .models import Bina, Daire, Oda, Esya
 
 
+@method_decorator(login_required(login_url='ev-envanter-takibi/giris/'), name='dispatch')
 class BinaListView(ListView):
     model = Bina
     context_object_name = 'binalar'
 
+    def get_queryset(self):
+        return Bina.objects.filter(user=self.request.user)
 
+
+@method_decorator(login_required(login_url='ev-envanter-takibi/giris/'), name='dispatch')
 class DaireListView(ListView):
     model = Daire
     context_object_name = 'daireler'
@@ -28,6 +38,7 @@ class DaireListView(ListView):
         return context
 
 
+@method_decorator(login_required(login_url='ev-envanter-takibi/giris/'), name='dispatch')
 class OdaListView(ListView):
     model = Oda
     context_object_name = 'odalar'
@@ -45,6 +56,7 @@ class OdaListView(ListView):
         return context
 
 
+@method_decorator(login_required(login_url='ev-envanter-takibi/giris/'), name='dispatch')
 class EsyaListView(ListView):
     model = Esya
     context_object_name = 'esyalar'
@@ -65,6 +77,7 @@ class EsyaListView(ListView):
         return context
 
 
+@method_decorator(login_required(login_url='ev-envanter-takibi/giris/'), name='dispatch')
 class ModelCreateView(CreateView):
     template_name = 'app/model_create_update_form.html'
     context_object_name = 'object'
@@ -87,13 +100,15 @@ class ModelCreateView(CreateView):
 
     def form_valid(self, form):
         model_name = self.model.__name__
-        if model_name == 'Daire':
+        if model_name == 'Bina':
+            form.instance.user = self.request.user
+        elif model_name == 'Daire':
             bina = Bina.objects.get(slug=self.kwargs['bina_slug'])
             form.instance.bina = bina
         elif model_name == 'Oda':
             daire = Daire.objects.get(pk=self.kwargs['daire_pk'])
             form.instance.daire = daire
-        elif model_name == 'Esya':
+        else:
             daire = Daire.objects.get(pk=self.kwargs['daire_pk'])
             oda = Oda.objects.get(daire=daire, slug=self.kwargs['oda_slug'])
             form.instance.oda = oda
@@ -101,6 +116,7 @@ class ModelCreateView(CreateView):
         return super(ModelCreateView, self).form_valid(form)
 
 
+@method_decorator(login_required(login_url='ev-envanter-takibi/giris/'), name='dispatch')
 class ModelUpdateView(UpdateView):
     template_name = 'app/model_create_update_form.html'
     context_object_name = 'object'
@@ -125,11 +141,13 @@ class ModelUpdateView(UpdateView):
         return context
 
 
+@method_decorator(login_required(login_url='ev-envanter-takibi/giris/'), name='dispatch')
 class BinaDeleteView(DeleteView):
     model = Bina
     success_url = reverse_lazy('app:bina-list')
 
 
+@method_decorator(login_required(login_url='ev-envanter-takibi/giris/'), name='dispatch')
 class DaireDeleteView(DeleteView):
     model = Daire
 
@@ -139,6 +157,7 @@ class DaireDeleteView(DeleteView):
         return super(DaireDeleteView, self).dispatch(request, *args, **kwargs)
 
 
+@method_decorator(login_required(login_url='ev-envanter-takibi/giris/'), name='dispatch')
 class OdaDeleteView(DeleteView):
     model = Oda
 
@@ -149,6 +168,7 @@ class OdaDeleteView(DeleteView):
         return super(OdaDeleteView, self).dispatch(request, *args, **kwargs)
 
 
+@method_decorator(login_required(login_url='ev-envanter-takibi/giris/'), name='dispatch')
 class EsyaDeleteView(DeleteView):
     model = Esya
 
@@ -159,3 +179,8 @@ class EsyaDeleteView(DeleteView):
                                                                   'oda_slug': esya.oda.slug})
         return super(EsyaDeleteView, self).dispatch(request, *args, **kwargs)
 
+
+class UserCreateView(CreateView):
+    template_name = 'app/register.html'
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')

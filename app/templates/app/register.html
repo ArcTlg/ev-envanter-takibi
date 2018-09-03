@@ -1,0 +1,30 @@
+{% extends 'app/base.html' %}
+{% block back_button %}{% endblock %}
+
+
+{% block panel_title %}{{ panel_title }}{% endblock %}
+
+{% block panel_body %}
+    <div class="container">
+      <form method="post">
+        <div class="form-group">
+            <div class="col-sm-5">
+              <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                  <p>
+                    {{ field.label_tag }}<br>
+                    {{ field }}
+                    {% for error in field.errors %}
+                      <p style="color: red">{{ error }}</p>
+                    {% endfor %}
+                  </p>
+                {% endfor %}
+                <button type="submit" class="btn btn-success">Kayit</button>
+              </form>
+                <a href="{% url 'login' %}" class="btn btn-danger" name="iptal">Iptal</a>
+            </div>
+        </div>
+      </form>
+    </div>
+{% endblock %}

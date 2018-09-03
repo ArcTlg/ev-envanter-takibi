@@ -4,9 +4,11 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.urls import reverse
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 
 class Bina(models.Model):
+    user = models.ForeignKey(User)
     name = models.CharField('Bina Adi', max_length=100, unique=True)
     slug = models.SlugField(max_length=50)
     total_price = models.FloatField(default=0)
